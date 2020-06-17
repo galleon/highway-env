@@ -11,11 +11,11 @@ from utils import record_videos, show_videos, capture_intermediate_frames
 env = gym.make("highway-v0")
 obs, done = env.reset(), False
 
-#model = DQN(MlpPolicy, env, verbose=1)
-#model.learn(total_timesteps=25000)
-#model.save("highway-deepq")
+model = DQN(MlpPolicy, env, verbose=1)
+model.learn(total_timesteps=25000)
+model.save("highway-deepq")
 
-#del model # remove to demonstrate saving and loading
+del model # remove to demonstrate saving and loading
 
 agent = DQN.load("highway-deepq")
 
