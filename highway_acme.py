@@ -27,7 +27,7 @@ for step in range(env.unwrapped.config["duration"]):
     action, _states = agent.predict(obs)
     obs, rewards, dones, info = env.step(action)
     print(obs)
-    print('-----------)
+    print('-----------')
 
 env.close()
 show_videos()
