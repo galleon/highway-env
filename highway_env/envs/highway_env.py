@@ -44,7 +44,7 @@ class HighwayEnv(AbstractEnv):
         self.steps = 0
         return super().reset()
 
-    def step(self, action: int) -> Tuple[np.ndarray, float, bool, dict]:
+    def step(self, action):
         self.steps += 1
         return super().step(action)
 

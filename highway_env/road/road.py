@@ -17,10 +17,10 @@ class RoadNetwork:
     @staticmethod
     def straight_road_network(lanes=4, length=10000, angle=0):
         rn = RoadNetwork()
-        for l in range(lanes):
-            beg = 
-            end = 
-            rot = 
+        for lane in range(lanes):
+            beg = np.array([0     , lane * StraightLane.DEFAULT_WIDTH])
+            end = np.array([length, lane * StraightLane.DEFAULT_WIDTH])
+            rot = np.array([[np.cos(angle), np.sin(angle)], [-np.sin(angle), np.cos(angle)]])
             rn.add_lane("0", "1", StraightLane(beg, end, line_types=line_types))
         return rn
 

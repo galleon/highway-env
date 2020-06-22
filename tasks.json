@@ -1,0 +1,18 @@
+{
+            "label": "basic run",
+            "type": "shell",
+            "options": {
+                "cwd": "${workspaceFolder}/",
+                "env": {
+                    "PYTHONPATH": "/Users/alleon_g/Documents/0x-Work/highway-env/highway_env/envs/:/Users/alleon_g/Documents/0x-Work/highway-env/highway_env/",
+                    "JSBSIM_ROOT_DIR": "/Users/alleon_g/Documents/0x-Work/jsbsim"
+                }
+            },
+            "command": "/Users/alleon_g/Documents/0x-Work/highway-env/.venv/bin/python3",
+            "args": [
+                "/Users/alleon_g/Documents/0x-Work/highway-env/highway_planning.py",
+                "-p",
+                "yes"
+            ],
+            "problemMatcher": []
+        },

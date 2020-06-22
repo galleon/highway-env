@@ -9,7 +9,7 @@ import numpy as np
 from highway_env.envs.common.observation import observation_factory
 from highway_env.envs.common.finite_mdp import finite_mdp
 from highway_env.envs.common.graphics import EnvViewer
-from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
+#from highway_env.vehicle.behavior import IDMVehicle, LinearVehicle
 from highway_env.vehicle.controller import MDPVehicle
 
 Action = Union[int, np.ndarray]
@@ -46,7 +46,7 @@ class AbstractEnv(gym.Env):
     STEERING_RANGE = np.pi / 4
     ACCELERATION_RANGE = 5.0
 
-    def __init__(self, config: dict = None) -> None:
+    def __init__(self, config = None):
         # Configuration
         self.config = self.default_config()
         if config:
@@ -81,7 +81,7 @@ class AbstractEnv(gym.Env):
         self.reset()
 
     @classmethod
-    def default_config(cls) -> dict:
+    def default_config(cls):
         """
             Default environment configuration.
 
@@ -107,15 +107,15 @@ class AbstractEnv(gym.Env):
             "offscreen_rendering": False
         }
 
-    def seed(self, seed: int = None) -> List[int]:
+    def seed(self, seed = None):
         self.np_random, seed = seeding.np_random(seed)
         return [seed]
 
-    def configure(self, config: dict) -> None:
+    def configure(self, config):
         if config:
             self.config.update(config)
 
-    def define_spaces(self) -> None:
+    def define_spaces(self):
         self.observation = observation_factory(self, self.config["observation"])
         self.observation_space = self.observation.space()
 
@@ -124,7 +124,7 @@ class AbstractEnv(gym.Env):
         elif self.config["action"]["type"] == "Continuous":
             self.action_space = spaces.Box(-1., 1., shape=(2,), dtype=np.float32)
 
-    def _reward(self, action: Action) -> float:
+    def _reward(self, action):
         """
             Return the reward associated with performing a given action and ending up in the current state.
 
@@ -133,14 +133,14 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def _is_terminal(self) -> bool:
+    def _is_terminal(self):
         """
             Check whether the current state is a terminal state
         :return:is the state terminal
         """
         raise NotImplementedError
 
-    def _cost(self, action: Action) -> float:
+    def _cost(self, action):
         """
             A constraint metric, for budgeted MDP.
 
@@ -151,7 +151,7 @@ class AbstractEnv(gym.Env):
         """
         raise NotImplementedError
 
-    def reset(self) -> Observation:
+    def reset(self):
         """
             Reset the environment to it's initial configuration
         :return: the observation of the reset state
@@ -161,7 +161,7 @@ class AbstractEnv(gym.Env):
         self.define_spaces()
         return self.observation.observe()
 
-    def step(self, action: Action) -> Tuple[Observation, float, bool, dict]:
+    def step(self, action):
         """
             Perform an action and step the environment dynamics.
 
@@ -191,7 +191,7 @@ class AbstractEnv(gym.Env):
 
         return obs, reward, terminal, info
 
-    def _simulate(self, action: Optional[Action] = None) -> None:
+    def _simulate(self, action = None):
         """
             Perform several steps of simulation with constant action
         """
@@ -220,7 +220,7 @@ class AbstractEnv(gym.Env):
                 break
         self.enable_auto_render = False
 
-    def render(self, mode: str = 'human') -> Optional[np.ndarray]:
+    def render(self, mode = 'human'):
         """
             Render the environment.
 
@@ -245,7 +245,7 @@ class AbstractEnv(gym.Env):
             return image
         self.should_update_rendering = False
 
-    def close(self) -> None:
+    def close(self):
         """
             Close the environment.
 
@@ -256,7 +256,7 @@ class AbstractEnv(gym.Env):
             self.viewer.close()
         self.viewer = None
 
-    def get_available_actions(self) -> List[int]:
+    def get_available_actions(self):
         """
             Get the list of currently available actions.
 
@@ -279,7 +279,7 @@ class AbstractEnv(gym.Env):
             actions.append(self.ACTIONS_INDEXES['SLOWER'])
         return actions
 
-    def _automatic_rendering(self) -> None:
+    def _automatic_rendering(self):
         """
             Automatically render the intermediate frames while an action is still ongoing.
             This allows to render the whole video and not only single steps corresponding to agent decision-making.
@@ -295,7 +295,7 @@ class AbstractEnv(gym.Env):
             else:
                 self.render(self.rendering_mode)
 
-    def simplify(self) -> 'AbstractEnv':
+    def simplify(self):
         """
             Return a simplified copy of the environment where distant vehicles have been removed from the road.
 
@@ -309,7 +309,7 @@ class AbstractEnv(gym.Env):
 
         return state_copy
 
-    def change_vehicles(self, vehicle_class_path: str) -> 'AbstractEnv':
+    def change_vehicles(self, vehicle_class_path):
         """
             Change the type of all vehicles on the road
         :param vehicle_class_path: The path of the class of behavior for other vehicles
@@ -335,14 +335,14 @@ class AbstractEnv(gym.Env):
                     v.LANE_CHANGE_MAX_BRAKING_IMPOSED = 1000
         return env_copy
 
-    def set_route_at_intersection(self, _to: str) -> 'AbstractEnv':
+    def set_route_at_intersection(self, _to):
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):
                 v.set_route_at_intersection(_to)
         return env_copy
 
-    def set_vehicle_field(self, args: Tuple[str, object]) -> 'AbstractEnv':
+    def set_vehicle_field(self, args):
         field, value = args
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
@@ -350,7 +350,7 @@ class AbstractEnv(gym.Env):
                 setattr(v, field, value)
         return env_copy
 
-    def call_vehicle_method(self, args: Tuple[str, Tuple]) -> 'AbstractEnv':
+    def call_vehicle_method(self, args):
         method, args = args
         env_copy = copy.deepcopy(self)
         for i, v in enumerate(env_copy.road.vehicles):
@@ -358,7 +358,7 @@ class AbstractEnv(gym.Env):
                 env_copy.road.vehicles[i] = getattr(v, method)(*args)
         return env_copy
 
-    def randomize_behaviour(self) -> 'AbstractEnv':
+    def randomize_behaviour(self):
         env_copy = copy.deepcopy(self)
         for v in env_copy.road.vehicles:
             if isinstance(v, IDMVehicle):

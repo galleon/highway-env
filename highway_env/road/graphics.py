@@ -34,7 +34,7 @@ class WorldSurface(pygame.Surface):
         )
 
     def handle_event(self, event):
-        if event.type = pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_l:
                 self.scaling *= 1 / self._scaling_factor
             if event.key == pygame.K_o:
